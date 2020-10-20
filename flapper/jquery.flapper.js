@@ -112,8 +112,6 @@
                         digits.unshift(this.options.padding);
                     }
                 }
-				
-				console.log(digits);
             } else if (digits.length > this.options.width) {
                 var overage = digits.length - this.options.width;
                 if (this.options.align == 'left') {
