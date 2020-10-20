@@ -96,13 +96,24 @@
             var digits = strval.split('');
 
             if (digits.length < this.options.width) {
+				this.paddingFlag = true;
                 while (digits.length < this.options.width) {
                     if (this.options.align == 'left') {
                         digits.push(this.options.padding);
-                    } else {
+                    } else if (this.options.align === 'center') {
+						if (this.paddingFlag) {
+							digits.push(this.options.padding);
+						} else {
+							digits.unshift(this.options.padding);
+						}
+						
+						this.paddingFlag = !this.paddingFlag;
+					} else {
                         digits.unshift(this.options.padding);
                     }
                 }
+				
+				console.log(digits);
             } else if (digits.length > this.options.width) {
                 var overage = digits.length - this.options.width;
                 if (this.options.align == 'left') {
@@ -120,8 +131,17 @@
             if (this.options.align === 'left') {
                 this.digits.push(flapDigit);
                 this.$div.append(flapDigit.$ele);
-            }
-            else{
+            } else if (this.options.align === 'center') {
+				if (this.paddingFlag) {
+					this.digits.push(flapDigit);
+                    this.$div.append(flapDigit.$ele);
+				} else {
+					this.digits.unshift(flapDigit);
+					this.$div.prepend(flapDigit.$ele);
+				}
+				
+				this.paddingFlag = !this.paddingFlag;
+			} else {
                 this.digits.unshift(flapDigit);
                 this.$div.prepend(flapDigit.$ele);
             }
@@ -130,7 +150,22 @@
         },
         
         removeDigit: function(){
-            var flapDigit = (this.options.align === 'left') ? this.digits.pop() : this.digits.shift();
+            var flapDigit;
+			
+			if (this.options.align === 'left') {
+				flapDigit = this.digits.pop();
+			} else if (this.options.align === 'center') {
+				if (this.paddingFlag) {
+					flapDigit = this.digits.pop();
+				} else {
+					flapDigit = this.digits.shift();
+				}
+				
+				this.paddingFlag = !this.paddingFlag;
+			} else {
+				flapDigit = this.digits.shift();
+			}
+			
             flapDigit.$ele.remove();
             this.options.width = this.digits.length;
         },

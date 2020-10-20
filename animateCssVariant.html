@@ -1,0 +1,99 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<style>
+@media screen and (max-width: 1024px) {
+  #page-section-5f3d581f5256010f80edda54 , #block-2c11427570599ffdd796 {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
+  
+@media screen and (max-width: 767px) {
+    #page-section-5f6dd922478ed255896fb051 .span-3 {
+        width: 50% !important;
+        float: left !important;
+    }
+}
+  
+#page-section-5f3d411840ab7c08450906e2 .sqs-layout .sqs-grid-12 .columns-12 {
+  color: #676767;
+  white-space: nowrap;  
+}
+
+h1 {text-transform: uppercase;}
+
+  /* Words changing in header */
+  .wordCarousel {
+    display: inline-block;
+    color: #f26522;
+    font-size: 120%;
+  }
+
+
+</style>
+
+
+<script>
+	const domReady = fn => {
+		document.addEventListener("DOMContentLoaded", fn);
+		if (document.readyState === "interactive" || document.readyState === "complete" ) fn();
+	}
+  
+	const animateCSS = (node, animation, prefix = 'animate__') => (
+		new Promise((resolve, reject) => {
+			const animationName = `${prefix}${animation}`;
+
+			node.classList.add(`${prefix}animated`, animationName);
+
+			const handleAnimationEnd = () => {
+			  node.classList.remove(`${prefix}animated`, animationName);
+			  node.removeEventListener('animationend', handleAnimationEnd);
+			  resolve();
+			}
+
+			node.addEventListener('animationend', handleAnimationEnd, {once: true});
+		})
+	);
+  
+	const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+	
+	const createWordCarousel = selector => {
+		const element = document.querySelector(selector);
+		const words = ['behaviours', 'decisions', 'thoughts', 'feelings', 'actions'];
+		const container = document.createElement('div');
+		container.className = 'wordCarousel';
+		  
+		for (const word of words) {
+			const wordEl = document.createElement('span');
+			wordEl.innerHTML = word;
+			wordEl.style.display = 'none';
+			container.appendChild(wordEl);
+		}
+
+		const animateElement = async (i) => {
+			const element = container.children[i];
+			element.style.display = 'inline-block';
+			await animateCSS(element, 'bounceIn');
+			await wait(2000);
+			await animateCSS(element, 'bounceOut');
+			element.style.display = 'none';
+		};
+		
+		const runAnimation = async () => {
+		  let i = 0;
+
+		  while (true) {
+		    await animateElement(i);
+			i++;
+			if (i >= words.length) i = 0;
+		  }
+		};
+	
+		element.appendChild(container);
+		runAnimation().catch(e => console.error(e));
+	}
+    
+    domReady(() => {
+      createWordCarousel("#block-9c0130cabe63890863b7 > div > h4");
+    })
+</script>
