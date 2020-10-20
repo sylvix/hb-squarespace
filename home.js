@@ -1,3 +1,3 @@
 $(() => {
-  $('h1').text('JS is working');
+  $('h1').text('Checking cache life span');
 });
